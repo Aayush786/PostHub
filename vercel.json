@@ -3,11 +3,11 @@
   "rewrites": [
     {
       "source": "/api/:path*",
-      "destination": "http://localhost:3001/api/:path*"
+      "destination": "https://posthub-2i6j.onrender.com/api/:path*"
     },
     {
       "source": "/uploads/:path*",
-      "destination": "http://localhost:3001/uploads/:path*"
+      "destination": "https://posthub-2i6j.onrender.com/uploads/:path*"
     }
   ]
 }
