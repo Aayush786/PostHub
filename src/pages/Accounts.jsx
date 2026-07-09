@@ -4,9 +4,9 @@ import PlatformCard from '../components/PlatformCard'
 
 function Accounts() {
   const [accounts, setAccounts] = useState([
-    { id: 'facebook', platform: 'facebook', username: 'TravelDiaries Page', avatar: '', isConnected: true, stats: { followers: '45.2K', posts: '182', engagement: '3.6%' } },
-    { id: 'youtube', platform: 'youtube', username: 'TravelDiaries YT Channel', avatar: '', isConnected: true, stats: { followers: '68.1K', posts: '94', engagement: '5.2%' } },
-    { id: 'tiktok', platform: 'tiktok', username: 'travel_diaries Account', avatar: '', isConnected: false, stats: { followers: '0', posts: '0', engagement: '0%' } }
+    { id: 'facebook', platform: 'facebook', username: 'Facebook Page', avatar: '', isConnected: false, stats: { followers: '0', posts: '0', engagement: '0%' } },
+    { id: 'youtube', platform: 'youtube', username: 'YouTube Channel', avatar: '', isConnected: false, stats: { followers: '0', posts: '0', engagement: '0%' } },
+    { id: 'tiktok', platform: 'tiktok', username: 'TikTok Account', avatar: '', isConnected: false, stats: { followers: '0', posts: '0', engagement: '0%' } }
   ])
 
   const [toast, setToast] = useState(null)
@@ -26,21 +26,30 @@ function Accounts() {
             if (match) {
               return {
                 ...acc,
+                id: match.id.toString(), // Store DB ID for disconnect operations
                 username: match.display_name || match.username || acc.username,
                 avatar: match.avatar_url || '',
-                isConnected: true
+                isConnected: true,
+                stats: {
+                  followers: match.followers_count ? match.followers_count.toLocaleString() : '0',
+                  posts: match.posts_count || '0',
+                  engagement: match.engagement_rate ? `${match.engagement_rate}%` : '0%'
+                }
               }
             } else {
               return {
                 ...acc,
-                isConnected: false
+                isConnected: false,
+                stats: { followers: '0', posts: '0', engagement: '0%' }
               }
             }
           })
           setAccounts(updated)
         }
       })
-      .catch(() => {})
+      .catch(() => {
+        console.log('Query accounts failed (using offline defaults).')
+      })
   }
 
   useEffect(() => {
@@ -64,12 +73,11 @@ function Accounts() {
           showToast(`Disconnected ${platform.toUpperCase()} successfully!`, 'success')
           fetchAccounts()
         } else {
-          showToast(`Disconnected ${platform.toUpperCase()} (Offline Mode)`, 'success')
-          setAccounts(accounts.map(acc => acc.platform === platform ? { ...acc, isConnected: false } : acc))
+          showToast(`Failed to disconnect: server error`, 'error')
         }
       } catch (err) {
         showToast(`Disconnected ${platform.toUpperCase()} (Simulated Mode)`, 'success')
-        setAccounts(accounts.map(acc => acc.platform === platform ? { ...acc, isConnected: false } : acc))
+        setAccounts(accounts.map(acc => acc.platform === platform ? { ...acc, isConnected: false, stats: { followers: '0', posts: '0', engagement: '0%' } } : acc))
       }
     }
   }
@@ -82,7 +90,7 @@ function Accounts() {
         if (data.success) {
           showToast(`Successfully refreshed security connection to ${platform.toUpperCase()}!`, 'success')
         } else {
-          showToast(`Token refreshed successfully (Simulated)`, 'success')
+          showToast(`Failed to refresh token: server error`, 'error')
         }
       })
       .catch(() => {
@@ -117,7 +125,7 @@ function Accounts() {
             isConnected={acc.isConnected}
             stats={acc.stats}
             onConnect={() => handleConnect(acc.platform)}
-            onDisconnect={() => handleDisconnect(acc.platform, acc.platform)}
+            onDisconnect={() => handleDisconnect(acc.id, acc.platform)}
             onRefresh={() => handleRefresh(acc.platform)}
           />
         ))}

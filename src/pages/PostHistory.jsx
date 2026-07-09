@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
-import { Search, Facebook, Youtube, Calendar, Eye, Heart, AlertCircle, Trash2, ExternalLink } from 'lucide-react'
+import { Link } from 'react-router-dom'
+import { Search, Facebook, Youtube, Calendar, Eye, Heart, AlertCircle, Trash2, ExternalLink, Plus } from 'lucide-react'
 
 const TikTokIcon = ({ size = 12, color = 'currentColor' }) => (
   <svg 
@@ -17,44 +18,46 @@ const TikTokIcon = ({ size = 12, color = 'currentColor' }) => (
 )
 
 function PostHistory() {
-  const [posts, setPosts] = useState([
-    { id: '1', title: 'Top 10 Hidden Gems in Switzerland 🇨🇭', description: 'Exploring the beauty of the Alps, hidden valleys, and crystal clear lakes.', mediaPath: '', mediaType: 'video/mp4', date: '2026-07-08', platforms: ['facebook', 'youtube'], status: 'published', views: '28.4K', likes: '1.2K' },
-    { id: '2', title: 'How to Pack Light for 2 Weeks in Asia', description: 'My ultimate minimalist packing guide for summer travels.', mediaPath: '', mediaType: 'video/mp4', date: '2026-07-06', platforms: ['facebook', 'tiktok'], status: 'published', views: '45.1K', likes: '3.8K' },
-    { id: '3', title: 'A Day in Venice: Vlog and Best Pizza Spots 🍕', description: 'Exploring the canals, hidden alleyways, and of course, testing local food!', mediaPath: '', mediaType: 'video/mp4', date: '2026-07-04', platforms: ['youtube'], status: 'published', views: '12.8K', likes: '820' },
-    { id: '4', title: 'Unboxing the Ultimate Travel Drone (4K)', description: 'First tests and review of the new drone. Cinematic footage included.', mediaPath: '', mediaType: 'video/mp4', date: '2026-07-02', platforms: ['facebook', 'youtube', 'tiktok'], status: 'failed', views: '0', likes: '0', errorMessage: 'YouTube: Quota exceeded limit' },
-    { id: '5', title: 'Tips for Shooting Cinematic drone Footage', description: 'Quick tips on camera settings, lighting, and movement for high quality videos.', mediaPath: '', mediaType: 'image/png', date: '2026-07-01', platforms: ['facebook'], status: 'published', views: '9.4K', likes: '340' },
-    { id: '6', title: 'Packing list checklist checklist template pdf', description: 'Shared layout of packing files.', mediaPath: '', mediaType: 'image/png', date: '2026-06-28', platforms: ['facebook'], status: 'draft', views: '0', likes: '0' }
-  ])
+  const [posts, setPosts] = useState([])
+  const [loading, setLoading] = useState(true)
 
   // Filters
   const [platformFilter, setPlatformFilter] = useState('all')
   const [statusFilter, setStatusFilter] = useState('all')
   const [searchQuery, setSearchQuery] = useState('')
 
+  const fetchPostHistory = async () => {
+    setLoading(true)
+    try {
+      const response = await fetch('/api/posts')
+      const data = await response.json()
+      if (Array.isArray(data)) {
+        const formatted = data.map(post => {
+          const platforms = post.targets ? post.targets.map(t => t.platform) : []
+          return {
+            id: post.id.toString(),
+            title: post.title || 'Untitled Post',
+            description: post.description || '',
+            mediaPath: post.media_path || '',
+            mediaType: post.media_type || '',
+            date: new Date(post.created_at).toISOString().split('T')[0],
+            platforms,
+            status: post.status,
+            views: '0',
+            likes: '0'
+          }
+        })
+        setPosts(formatted)
+      }
+    } catch (err) {
+      console.log('Post history retrieval failed (running in offline mode).')
+    } finally {
+      setLoading(false)
+    }
+  }
+
   useEffect(() => {
-    fetch('/api/posts')
-      .then(res => res.json())
-      .then(data => {
-        if (Array.isArray(data) && data.length > 0) {
-          const formatted = data.map(post => {
-            const platforms = post.targets ? post.targets.map(t => t.platform) : []
-            return {
-              id: post.id.toString(),
-              title: post.title || 'Untitled Post',
-              description: post.description || '',
-              mediaPath: post.media_path || '',
-              mediaType: post.media_type || '',
-              date: new Date(post.created_at).toISOString().split('T')[0],
-              platforms,
-              status: post.status,
-              views: '0',
-              likes: '0'
-            }
-          })
-          setPosts(formatted)
-        }
-      })
-      .catch(() => {})
+    fetchPostHistory()
   }, [])
 
   const handleDelete = async (id) => {
@@ -64,7 +67,8 @@ function PostHistory() {
           method: 'DELETE'
         })
         if (response.ok) {
-          setPosts(posts.filter(post => post.id !== id))
+          showToast('Post entry deleted successfully', 'success')
+          fetchPostHistory()
         } else {
           setPosts(posts.filter(post => post.id !== id))
         }
@@ -277,10 +281,14 @@ function PostHistory() {
             </table>
           </div>
         ) : (
-          <div style={{ textAlign: 'center', padding: '48px 16px', color: 'var(--text-muted)' }}>
-            <AlertCircle size={28} style={{ margin: '0 auto 8px auto', opacity: 0.5 }} />
+          <div style={{ textAlign: 'center', padding: '60px 16px', color: 'var(--text-muted)', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '12px' }}>
+            <AlertCircle size={28} style={{ opacity: 0.5 }} />
             <h3 style={{ fontSize: '0.9375rem', fontWeight: 600 }}>No posts found</h3>
-            <p style={{ fontSize: '0.75rem', marginTop: '2px' }}>Try modifying your filters.</p>
+            <p style={{ fontSize: '0.75rem', marginTop: '2px' }}>Write and publish content across your channels to populate your post history.</p>
+            <Link to="/compose" className="btn btn-secondary btn-sm" style={{ display: 'inline-flex', gap: '4px' }}>
+              <Plus size={12} />
+              <span>Compose First Post</span>
+            </Link>
           </div>
         )}
       </div>
