@@ -32,13 +32,11 @@ function PostHistory() {
   const [searchQuery, setSearchQuery] = useState('')
 
   useEffect(() => {
-    // Fetch actual post entries from DB
     fetch('/api/posts')
       .then(res => res.json())
       .then(data => {
         if (Array.isArray(data) && data.length > 0) {
           const formatted = data.map(post => {
-            // Find targets
             const platforms = post.targets ? post.targets.map(t => t.platform) : []
             return {
               id: post.id.toString(),
@@ -56,7 +54,7 @@ function PostHistory() {
           setPosts(formatted)
         }
       })
-      .catch(() => console.log('Mocking posts list in PostHistory...'))
+      .catch(() => {})
   }, [])
 
   const handleDelete = async (id) => {
@@ -90,26 +88,26 @@ function PostHistory() {
   return (
     <div>
       <div className="dashboard-header">
-        <h1 className="gradient-text">Post History</h1>
+        <h1 style={{ fontSize: '1.625rem', fontWeight: 600 }}>Post History</h1>
         <p>Manage and audit previous publications, drafts, and channel posting errors.</p>
       </div>
 
       {/* Search and Filters bar */}
-      <div className="glass-card" style={{ padding: '16px', marginBottom: '24px' }}>
-        <div className="filter-bar" style={{ margin: '0' }}>
+      <div className="glass-card" style={{ padding: '12px 16px', marginBottom: '20px' }}>
+        <div className="filter-bar">
           
           <div className="filters-left">
             {/* Search inputs */}
-            <div style={{ position: 'relative', width: '260px' }}>
+            <div style={{ position: 'relative', width: '220px' }}>
               <input
                 type="text"
                 className="form-control"
-                placeholder="Search posts..."
-                style={{ paddingLeft: '36px' }}
+                placeholder="Search..."
+                style={{ paddingLeft: '32px', paddingTop: '8px', paddingBottom: '8px' }}
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
               />
-              <Search size={16} style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)', color: 'rgba(255,255,255,0.4)' }} />
+              <Search size={14} style={{ position: 'absolute', left: '10px', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-secondary)' }} />
             </div>
 
             {/* Platform filter buttons */}
@@ -188,11 +186,11 @@ function PostHistory() {
             <table className="custom-table">
               <thead>
                 <tr>
-                  <th>Content Title</th>
-                  <th>Platforms</th>
+                  <th>Post Details</th>
+                  <th>Channels</th>
                   <th>Date</th>
                   <th>Status</th>
-                  <th>Aggregated Insights</th>
+                  <th>Insights</th>
                   <th>Actions</th>
                 </tr>
               </thead>
@@ -201,7 +199,7 @@ function PostHistory() {
                   <tr key={post.id}>
                     <td>
                       <div className="post-preview-cell">
-                        <div className="post-preview-thumb" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.9rem', background: 'rgba(255,255,255,0.05)' }}>
+                        <div className="post-preview-thumb" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.8rem', background: 'rgba(255,255,255,0.02)', border: '1px solid var(--border-color)' }}>
                           {post.mediaType && post.mediaType.startsWith('image/') ? '🖼️' : '🎥'}
                         </div>
                         <div className="post-preview-text">
@@ -217,9 +215,9 @@ function PostHistory() {
                         {post.platforms.includes('tiktok') && <span className="badge badge-tiktok"><TikTokIcon size={10} /> TT</span>}
                       </div>
                     </td>
-                    <td style={{ color: 'var(--text-secondary)', fontSize: '0.85rem' }}>
+                    <td style={{ color: 'var(--text-secondary)', fontSize: '0.8125rem' }}>
                       <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
-                        <Calendar size={12} />
+                        <Calendar size={12} style={{ color: 'var(--text-secondary)' }} />
                         {post.date}
                       </span>
                     </td>
@@ -229,47 +227,47 @@ function PostHistory() {
                       </span>
                       {post.status === 'failed' && post.errorMessage && (
                         <div 
-                          style={{ fontSize: '0.75rem', color: '#feb2b2', display: 'flex', alignItems: 'center', gap: '4px', marginTop: '4px' }}
+                          style={{ fontSize: '0.7rem', color: '#fca5a5', display: 'flex', alignItems: 'center', gap: '3px', marginTop: '3px' }}
                           title={post.errorMessage}
                         >
                           <AlertCircle size={10} />
-                          <span>Hover to see error</span>
+                          <span>hover for details</span>
                         </div>
                       )}
                     </td>
                     <td>
                       {post.status === 'published' ? (
-                        <div style={{ display: 'flex', gap: '12px', fontSize: '0.85rem' }}>
+                        <div style={{ display: 'flex', gap: '10px', fontSize: '0.8125rem' }}>
                           <span style={{ display: 'flex', alignItems: 'center', gap: '4px', fontWeight: 600 }}>
-                            <Eye size={12} style={{ color: '#06b6d4' }} /> {post.views}
+                            <Eye size={12} style={{ color: 'var(--text-secondary)' }} /> {post.views}
                           </span>
-                          <span style={{ display: 'flex', alignItems: 'center', gap: '4px', color: 'rgba(255,255,255,0.7)' }}>
-                            <Heart size={12} style={{ color: '#ec4899' }} /> {post.likes}
+                          <span style={{ display: 'flex', alignItems: 'center', gap: '4px', color: 'var(--text-secondary)' }}>
+                            <Heart size={12} style={{ color: 'var(--text-secondary)' }} /> {post.likes}
                           </span>
                         </div>
                       ) : (
-                        <span style={{ color: 'var(--text-muted)', fontSize: '0.85rem' }}>N/A</span>
+                        <span style={{ color: 'var(--text-muted)', fontSize: '0.8125rem' }}>—</span>
                       )}
                     </td>
                     <td>
-                      <div style={{ display: 'flex', gap: '4px' }}>
+                      <div style={{ display: 'flex', gap: '2px' }}>
                         {post.status === 'published' && (
                           <button 
                             className="btn btn-ghost btn-sm" 
-                            style={{ padding: '6px' }} 
-                            title="Open Published Link"
+                            style={{ padding: '4px' }} 
+                            title="Open Link"
                             onClick={() => window.open('#')}
                           >
-                            <ExternalLink size={14} />
+                            <ExternalLink size={12} />
                           </button>
                         )}
                         <button 
                           className="btn btn-ghost btn-sm" 
-                          style={{ padding: '6px', color: '#fca5a5' }} 
-                          title="Delete Post Entry"
+                          style={{ padding: '4px', color: '#fca5a5' }} 
+                          title="Delete"
                           onClick={() => handleDelete(post.id)}
                         >
-                          <Trash2 size={14} />
+                          <Trash2 size={12} />
                         </button>
                       </div>
                     </td>
@@ -279,10 +277,10 @@ function PostHistory() {
             </table>
           </div>
         ) : (
-          <div style={{ textAlign: 'center', padding: '60px 20px', color: 'var(--text-muted)' }}>
-            <AlertCircle size={36} style={{ margin: '0 auto 12px auto', opacity: 0.5 }} />
-            <h3>No posts found</h3>
-            <p style={{ fontSize: '0.9rem', marginTop: '4px' }}>Try modifying your search query or filters.</p>
+          <div style={{ textAlign: 'center', padding: '48px 16px', color: 'var(--text-muted)' }}>
+            <AlertCircle size={28} style={{ margin: '0 auto 8px auto', opacity: 0.5 }} />
+            <h3 style={{ fontSize: '0.9375rem', fontWeight: 600 }}>No posts found</h3>
+            <p style={{ fontSize: '0.75rem', marginTop: '2px' }}>Try modifying your filters.</p>
           </div>
         )}
       </div>

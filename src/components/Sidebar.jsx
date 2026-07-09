@@ -1,12 +1,11 @@
 import React, { useState, useEffect } from 'react'
 import { NavLink } from 'react-router-dom'
-import { LayoutDashboard, PenSquare, BarChart3, Users, History, Zap, X } from 'lucide-react'
+import { LayoutDashboard, PenSquare, BarChart3, Users, History, Layers, X } from 'lucide-react'
 
 function Sidebar({ isOpen, setIsOpen }) {
   const [connectedCount, setConnectedCount] = useState(0)
 
   useEffect(() => {
-    // Fetch connected accounts count
     fetch('/api/auth/accounts')
       .then(res => res.json())
       .then(data => {
@@ -14,27 +13,25 @@ function Sidebar({ isOpen, setIsOpen }) {
           setConnectedCount(data.length)
         }
       })
-      .catch(err => {
-        console.error('Error fetching accounts for sidebar count:', err)
-        // Hardcode a default fallback of 3 accounts for styling purposes
-        setConnectedCount(3)
+      .catch(() => {
+        setConnectedCount(2) // Default placeholder for display
       })
   }, [])
 
   const navItems = [
     { path: '/', label: 'Dashboard', icon: LayoutDashboard },
-    { path: '/compose', label: 'Compose', icon: PenSquare },
+    { path: '/compose', label: 'Compose Post', icon: PenSquare },
     { path: '/analytics', label: 'Analytics', icon: BarChart3 },
-    { path: '/accounts', label: 'Accounts', icon: Users },
+    { path: '/accounts', label: 'Connected Channels', icon: Users },
     { path: '/history', label: 'Post History', icon: History }
   ]
 
   return (
     <aside className={`sidebar ${isOpen ? 'open' : ''}`}>
       <div>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '28px', paddingLeft: '4px' }}>
           <NavLink to="/" className="sidebar-logo" onClick={() => setIsOpen(false)}>
-            <Zap size={24} color="#7c3aed" fill="#7c3aed" />
+            <Layers size={18} color="#6366f1" style={{ marginRight: '2px' }} />
             <h2>PostHub</h2>
           </NavLink>
           {isOpen && (
@@ -43,7 +40,7 @@ function Sidebar({ isOpen, setIsOpen }) {
               onClick={() => setIsOpen(false)}
               style={{ color: 'white', padding: '4px' }}
             >
-              <X size={20} />
+              <X size={16} />
             </button>
           )}
         </div>
@@ -58,7 +55,7 @@ function Sidebar({ isOpen, setIsOpen }) {
                 className={({ isActive }) => `sidebar-link ${isActive ? 'active' : ''}`}
                 onClick={() => setIsOpen(false)}
               >
-                <Icon size={20} />
+                <Icon size={16} />
                 <span>{item.label}</span>
               </NavLink>
             )
@@ -68,7 +65,7 @@ function Sidebar({ isOpen, setIsOpen }) {
 
       <div className="sidebar-footer">
         <div className="connected-indicator">
-          <span>Connected Channels</span>
+          <span>Active channels</span>
           <span className="connected-count">{connectedCount}</span>
         </div>
       </div>

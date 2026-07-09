@@ -2,46 +2,28 @@ import React from 'react'
 import { TrendingUp, TrendingDown } from 'lucide-react'
 
 function StatsCard({ title, value, change, changeType, icon: Icon, color = 'purple', subtitle }) {
-  // Map color string to class name
-  const colorClassMap = {
-    purple: 'card-purple',
-    blue: 'card-blue',
-    pink: 'card-pink',
-    cyan: 'card-cyan'
-  }
-
-  const iconColorMap = {
-    purple: '#7c3aed',
-    blue: '#3b82f6',
-    pink: '#ec4899',
-    cyan: '#06b6d4'
-  }
-
-  const cardClass = `glass-card stats-card ${colorClassMap[color] || 'card-purple'}`
-
   return (
-    <div className={cardClass}>
+    <div className="glass-card stats-card">
       <div>
         <div className="stats-card-header">
           <span className="stats-card-title">{title}</span>
-          <div 
-            className="stats-card-icon" 
-            style={{ backgroundColor: `${iconColorMap[color]}15`, color: iconColorMap[color] }}
-          >
-            {Icon && <Icon size={20} />}
-          </div>
+          {Icon && (
+            <div className="stats-card-icon">
+              <Icon size={16} />
+            </div>
+          )}
         </div>
         <div className="stats-card-value">{value}</div>
       </div>
       
       <div className="stats-card-footer">
         {change && (
-          <span className={changeType === 'up' ? 'trend-up' : 'trend-down'}>
-            {changeType === 'up' ? <TrendingUp size={14} style={{ marginRight: '2px' }} /> : <TrendingDown size={14} style={{ marginRight: '2px' }} />}
+          <span className={changeType === 'up' ? 'trend-up' : 'trend-down'} style={{ display: 'inline-flex', alignItems: 'center', gap: '2px' }}>
+            {changeType === 'up' ? <TrendingUp size={12} /> : <TrendingDown size={12} />}
             {change}
           </span>
         )}
-        <span className="stats-card-subtitle">{subtitle || 'since last month'}</span>
+        <span className="stats-card-subtitle">{subtitle || 'vs last month'}</span>
       </div>
     </div>
   )

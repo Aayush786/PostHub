@@ -26,7 +26,7 @@ function Analytics() {
         label: 'Facebook',
         data: [12000, 19000, 15000, 25000, 22000, 30000, 34000],
         borderColor: '#1877F2',
-        backgroundColor: 'rgba(24, 119, 242, 0.1)',
+        backgroundColor: 'rgba(24, 119, 242, 0.03)',
         fill: true,
         tension: 0.4
       },
@@ -34,7 +34,7 @@ function Analytics() {
         label: 'YouTube',
         data: [25000, 32000, 28000, 42000, 48000, 52000, 58000],
         borderColor: '#FF0000',
-        backgroundColor: 'rgba(255, 0, 0, 0.1)',
+        backgroundColor: 'rgba(255, 0, 0, 0.03)',
         fill: true,
         tension: 0.4
       },
@@ -42,7 +42,7 @@ function Analytics() {
         label: 'TikTok',
         data: [42000, 55000, 68000, 52000, 72000, 89000, 94000],
         borderColor: '#00F2EA',
-        backgroundColor: 'rgba(0, 242, 234, 0.05)',
+        backgroundColor: 'rgba(0, 242, 234, 0.02)',
         fill: true,
         tension: 0.4
       }
@@ -56,19 +56,19 @@ function Analytics() {
         label: 'Facebook',
         data: [3200, 840, 1200],
         backgroundColor: '#1877F2',
-        borderRadius: 6
+        borderRadius: 4
       },
       {
         label: 'YouTube',
         data: [8400, 2100, 940],
         backgroundColor: '#FF0000',
-        borderRadius: 6
+        borderRadius: 4
       },
       {
         label: 'TikTok',
         data: [18200, 4500, 2300],
         backgroundColor: '#00F2EA',
-        borderRadius: 6
+        borderRadius: 4
       }
     ]
   }
@@ -80,7 +80,7 @@ function Analytics() {
         data: [18.2, 45.4, 36.4],
         backgroundColor: ['#1877F2', '#FF0000', '#00F2EA'],
         borderWidth: 1,
-        borderColor: 'rgba(255, 255, 255, 0.1)'
+        borderColor: 'rgba(255, 255, 255, 0.05)'
       }
     ]
   }
@@ -91,8 +91,8 @@ function Analytics() {
       {
         label: 'Total Followers',
         data: [116100, 117800, 119200, 121000, 122100, 123400, 124500],
-        borderColor: '#7c3aed',
-        backgroundColor: 'rgba(124, 58, 237, 0.1)',
+        borderColor: '#6366f1',
+        backgroundColor: 'rgba(99, 102, 241, 0.03)',
         fill: true,
         tension: 0.3
       }
@@ -109,11 +109,9 @@ function Analytics() {
   ])
 
   useEffect(() => {
-    // Attempt cache fetch
     fetch('/api/analytics/overview')
       .then(res => res.json())
       .then(data => {
-        // Cache mapping if available
         if (data && data.totalViews) {
           setStats({
             views: data.totalViews,
@@ -127,15 +125,15 @@ function Analytics() {
           })
         }
       })
-      .catch(err => console.log('Mocking analytics overview statistics...'))
+      .catch(() => {})
   }, [timeRange])
 
   return (
     <div>
-      <div className="filter-bar">
+      <div className="filter-bar" style={{ borderBottom: '1px solid var(--border-color)', paddingBottom: '20px', marginBottom: '24px' }}>
         <div>
-          <h1 className="gradient-text">Analytics & Insights</h1>
-          <p>Multi-platform audience engagement, content retention rates, and insights.</p>
+          <h1 style={{ fontSize: '1.625rem', fontWeight: 600 }}>Analytics</h1>
+          <p>Multi-platform audience engagement, views, and content insights.</p>
         </div>
 
         <div className="filters-right">
@@ -145,26 +143,26 @@ function Analytics() {
               className={`filter-opt-btn ${timeRange === '7d' ? 'active' : ''}`}
               onClick={() => setTimeRange('7d')}
             >
-              7 Days
+              7d
             </button>
             <button 
               type="button" 
               className={`filter-opt-btn ${timeRange === '30d' ? 'active' : ''}`}
               onClick={() => setTimeRange('30d')}
             >
-              30 Days
+              30d
             </button>
             <button 
               type="button" 
               className={`filter-opt-btn ${timeRange === '90d' ? 'active' : ''}`}
               onClick={() => setTimeRange('90d')}
             >
-              90 Days
+              90d
             </button>
           </div>
           <button className="btn btn-secondary btn-sm" style={{ padding: '8px 12px' }}>
-            <Calendar size={16} />
-            <span>Select Date</span>
+            <Calendar size={14} />
+            <span>Select Range</span>
           </button>
         </div>
       </div>
@@ -177,7 +175,6 @@ function Analytics() {
           change={stats.viewsChange} 
           changeType="up" 
           icon={Eye} 
-          color="blue" 
         />
         <StatsCard 
           title="Total Interactions" 
@@ -185,7 +182,6 @@ function Analytics() {
           change={stats.engagementChange} 
           changeType="up" 
           icon={Heart} 
-          color="pink" 
         />
         <StatsCard 
           title="Follower Growth" 
@@ -193,7 +189,6 @@ function Analytics() {
           change={stats.followersChange} 
           changeType="up" 
           icon={UserPlus} 
-          color="purple" 
         />
         <StatsCard 
           title="Top Performing Channel" 
@@ -201,7 +196,6 @@ function Analytics() {
           change={stats.topPlatformVal} 
           changeType="up" 
           icon={Award} 
-          color="cyan" 
         />
       </div>
 
@@ -245,8 +239,8 @@ function Analytics() {
       {/* Top Performing content Table */}
       <div className="glass-card" style={{ display: 'flex', flexDirection: 'column' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
-          <h3 style={{ fontSize: '1.1rem', fontWeight: 600 }}>Top Performing Content</h3>
-          <span style={{ fontSize: '0.85rem', color: 'var(--text-secondary)' }}>Sorted by Views</span>
+          <h3 style={{ fontSize: '0.9375rem', fontWeight: 600 }}>Top Performing Content</h3>
+          <span style={{ fontSize: '0.75rem', color: 'var(--text-secondary)' }}>Sorted by Views</span>
         </div>
 
         <div className="table-container">
@@ -265,16 +259,16 @@ function Analytics() {
             <tbody>
               {topContent.map(content => (
                 <tr key={content.id}>
-                  <td style={{ fontWeight: 600 }}>{content.title}</td>
+                  <td style={{ fontWeight: 500, color: '#ffffff' }}>{content.title}</td>
                   <td>
                     {content.platform === 'facebook' && <span className="badge badge-facebook">Facebook</span>}
                     {content.platform === 'youtube' && <span className="badge badge-youtube">YouTube</span>}
                     {content.platform === 'tiktok' && <span className="badge badge-tiktok">TikTok</span>}
                   </td>
-                  <td style={{ fontWeight: 700 }}>{content.views}</td>
+                  <td style={{ fontWeight: 600 }}>{content.views}</td>
                   <td>{content.engagement}</td>
-                  <td style={{ color: 'rgba(255,255,255,0.7)' }}>{content.likes}</td>
-                  <td style={{ color: 'rgba(255,255,255,0.7)' }}>{content.comments}</td>
+                  <td style={{ color: 'var(--text-secondary)' }}>{content.likes}</td>
+                  <td style={{ color: 'var(--text-secondary)' }}>{content.comments}</td>
                   <td style={{ color: 'var(--text-muted)' }}>{content.date}</td>
                 </tr>
               ))}

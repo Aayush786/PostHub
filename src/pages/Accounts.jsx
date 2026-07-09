@@ -16,7 +16,6 @@ function Accounts() {
     setTimeout(() => setToast(null), 4000)
   }
 
-  // Fetch actual connected states from database
   const fetchAccounts = () => {
     fetch('/api/auth/accounts')
       .then(res => res.json())
@@ -41,9 +40,7 @@ function Accounts() {
           setAccounts(updated)
         }
       })
-      .catch(err => {
-        console.log('Mocking accounts list in Accounts page...')
-      })
+      .catch(() => {})
   }
 
   useEffect(() => {
@@ -67,7 +64,6 @@ function Accounts() {
           showToast(`Disconnected ${platform.toUpperCase()} successfully!`, 'success')
           fetchAccounts()
         } else {
-          // Fallback UI mock disconnect
           showToast(`Disconnected ${platform.toUpperCase()} (Offline Mode)`, 'success')
           setAccounts(accounts.map(acc => acc.platform === platform ? { ...acc, isConnected: false } : acc))
         }
@@ -99,19 +95,19 @@ function Accounts() {
       {toast && (
         <div className="toast-container">
           <div className={`toast toast-${toast.type}`}>
-            {toast.type === 'error' ? <AlertCircle size={18} /> : <CheckCircle2 size={18} />}
+            {toast.type === 'error' ? <AlertCircle size={14} /> : <CheckCircle2 size={14} />}
             <span>{toast.message}</span>
           </div>
         </div>
       )}
 
       <div className="dashboard-header">
-        <h1 className="gradient-text">Connected Channels</h1>
+        <h1 style={{ fontSize: '1.625rem', fontWeight: 600 }}>Connected Channels</h1>
         <p>Integrate and manage secure credentials for Facebook, YouTube, and TikTok channels.</p>
       </div>
 
       {/* Grid listing platform connection status */}
-      <div className="platforms-grid" style={{ marginBottom: '40px' }}>
+      <div className="platforms-grid" style={{ marginBottom: '32px' }}>
         {accounts.map(acc => (
           <PlatformCard 
             key={acc.platform}
@@ -128,12 +124,12 @@ function Accounts() {
       </div>
 
       {/* Free integration section */}
-      <div className="glass-card" style={{ marginBottom: '32px', borderLeft: '4px solid #06b6d4' }}>
-        <h3 style={{ fontSize: '1.1rem', fontWeight: 600, display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
-          <DollarSign size={20} color="#06b6d4" />
+      <div className="glass-card" style={{ marginBottom: '24px', borderLeft: '3px solid var(--accent-color)', backgroundColor: 'rgba(99, 102, 241, 0.02)' }}>
+        <h3 style={{ fontSize: '0.9375rem', fontWeight: 600, display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '6px' }}>
+          <DollarSign size={18} color="var(--accent-color)" />
           <span>API Access is 100% Free</span>
         </h3>
-        <p style={{ fontSize: '0.9rem', color: 'rgba(255, 255, 255, 0.7)', lineHeight: 1.6 }}>
+        <p style={{ fontSize: '0.8125rem', color: 'var(--text-secondary)', lineHeight: 1.5 }}>
           All three integrations run on free developer APIs provided by Meta, Google, and TikTok. 
           You do <b>not</b> need premium developer packages or payment profiles to connect your channels. 
           Simply register free developer applications to obtain Client IDs and configure your credentials.
@@ -142,32 +138,32 @@ function Accounts() {
 
       {/* Process Flow Guide */}
       <div className="glass-card">
-        <h3 style={{ fontSize: '1.1rem', fontWeight: 600, display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '24px' }}>
-          <HelpCircle size={20} color="#7c3aed" />
+        <h3 style={{ fontSize: '0.9375rem', fontWeight: 600, display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '20px' }}>
+          <HelpCircle size={18} color="var(--text-secondary)" />
           <span>How Authentication Works</span>
         </h3>
         
         <div className="guide-steps">
-          <div className="glass-card guide-step-card" style={{ background: 'rgba(255,255,255,0.01)' }}>
-            <div className="guide-step-num">1</div>
-            <h4 style={{ fontSize: '0.95rem', marginBottom: '8px' }}>Oauth Verification</h4>
-            <p style={{ fontSize: '0.8rem', color: 'rgba(255,255,255,0.5)', lineHeight: 1.5 }}>
+          <div className="guide-step-card">
+            <span className="guide-step-num">Step 1</span>
+            <h4 style={{ fontSize: '0.875rem', fontWeight: 600, marginBottom: '6px', color: '#ffffff' }}>OAuth Redirection</h4>
+            <p style={{ fontSize: '0.75rem', color: 'var(--text-secondary)', lineHeight: 1.4 }}>
               Click "Connect Account" to redirect to the official Facebook, YouTube, or TikTok secure authentication server.
             </p>
           </div>
 
-          <div className="glass-card guide-step-card" style={{ background: 'rgba(255,255,255,0.01)' }}>
-            <div className="guide-step-num">2</div>
-            <h4 style={{ fontSize: '0.95rem', marginBottom: '8px' }}>Grant Permissions</h4>
-            <p style={{ fontSize: '0.8rem', color: 'rgba(255,255,255,0.5)', lineHeight: 1.5 }}>
+          <div className="guide-step-card">
+            <span className="guide-step-num">Step 2</span>
+            <h4 style={{ fontSize: '0.875rem', fontWeight: 600, marginBottom: '6px', color: '#ffffff' }}>Grant Permissions</h4>
+            <p style={{ fontSize: '0.75rem', color: 'var(--text-secondary)', lineHeight: 1.4 }}>
               Accept requested publication and view scopes (e.g. video upload, insights reading) and confirm.
             </p>
           </div>
 
-          <div className="glass-card guide-step-card" style={{ background: 'rgba(255,255,255,0.01)' }}>
-            <div className="guide-step-num">3</div>
-            <h4 style={{ fontSize: '0.95rem', marginBottom: '8px' }}>Start Posting</h4>
-            <p style={{ fontSize: '0.8rem', color: 'rgba(255,255,255,0.5)', lineHeight: 1.5 }}>
+          <div className="guide-step-card">
+            <span className="guide-step-num">Step 3</span>
+            <h4 style={{ fontSize: '0.875rem', fontWeight: 600, marginBottom: '6px', color: '#ffffff' }}>Channel Synced</h4>
+            <p style={{ fontSize: '0.75rem', color: 'var(--text-secondary)', lineHeight: 1.4 }}>
               The platform redirects you back here with a secure token. You are ready to start publishing and tracking views!
             </p>
           </div>

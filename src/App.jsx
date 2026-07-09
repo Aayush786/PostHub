@@ -13,20 +13,13 @@ function App() {
 
   return (
     <div className="app-container">
-      {/* Background Orbs */}
-      <div className="orb-container">
-        <div className="orb orb-1"></div>
-        <div className="orb orb-2"></div>
-        <div className="orb orb-3"></div>
-      </div>
-
       {/* Mobile Toggle Button */}
       <button 
         className="mobile-menu-btn" 
         onClick={() => setSidebarOpen(!sidebarOpen)}
         aria-label="Toggle Navigation Menu"
       >
-        <Menu size={24} />
+        <Menu size={18} />
       </button>
 
       {/* Sidebar Navigation */}

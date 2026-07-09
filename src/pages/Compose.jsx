@@ -144,7 +144,7 @@ function Compose() {
       setIsPublishing(false)
 
       if (response.ok) {
-        showToast('Post created and queued for social channels successfully!', 'success')
+        showToast('Post created and queued successfully!', 'success')
         // Reset composer
         setMediaFile(null)
         setCommonDescription('')
@@ -157,8 +157,7 @@ function Compose() {
     } catch (err) {
       console.error('Error submitting form:', err)
       setIsPublishing(false)
-      // Since server might not be running in strict local environments, display successful mock posting
-      showToast('Offline Mode: Successfully simulated publishing to selected channels!', 'success')
+      showToast('Offline Mode: Simulated publishing to selected channels successfully!', 'success')
     }
   }
 
@@ -167,14 +166,14 @@ function Compose() {
       {toast && (
         <div className="toast-container">
           <div className={`toast toast-${toast.type}`}>
-            {toast.type === 'error' ? <AlertCircle size={18} /> : <CheckCircle2 size={18} />}
+            {toast.type === 'error' ? <AlertCircle size={14} /> : <CheckCircle2 size={14} />}
             <span>{toast.message}</span>
           </div>
         </div>
       )}
 
       <div className="dashboard-header">
-        <h1 className="gradient-text">Unified Composer</h1>
+        <h1 style={{ fontSize: '1.625rem', fontWeight: 600 }}>Compose Post</h1>
         <p>Draft your content once and dispatch customized details across Facebook, YouTube, and TikTok simultaneously.</p>
       </div>
 
@@ -370,7 +369,7 @@ function Compose() {
                     </select>
                   </div>
                   <div style={{ display: 'flex', gap: '24px', padding: '4px 0' }}>
-                    <label style={{ display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer', fontSize: '0.85rem', color: 'rgba(255,255,255,0.7)' }}>
+                    <label style={{ display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer', fontSize: '0.85rem', color: 'var(--text-secondary)' }}>
                       <input
                         type="checkbox"
                         checked={tiktokData.allowComments}
@@ -378,7 +377,7 @@ function Compose() {
                       />
                       <span>Allow Comments</span>
                     </label>
-                    <label style={{ display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer', fontSize: '0.85rem', color: 'rgba(255,255,255,0.7)' }}>
+                    <label style={{ display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer', fontSize: '0.85rem', color: 'var(--text-secondary)' }}>
                       <input
                         type="checkbox"
                         checked={tiktokData.allowDuet}
@@ -393,14 +392,14 @@ function Compose() {
           )}
 
           {/* Submission action buttons */}
-          <div style={{ display: 'flex', gap: '12px', borderTop: '1px solid var(--glass-border)', paddingTop: '20px', marginTop: '10px' }}>
+          <div style={{ display: 'flex', gap: '12px', borderTop: '1px solid var(--border-color)', paddingTop: '20px', marginTop: '10px' }}>
             <button
               type="submit"
               className="btn btn-primary"
               style={{ flex: 1 }}
               disabled={isPublishing || selectedPlatforms.length === 0}
             >
-              <Send size={16} />
+              <Send size={14} />
               <span>{isPublishing ? 'Publishing Content...' : 'Publish Content Now'}</span>
             </button>
             <button
@@ -409,7 +408,7 @@ function Compose() {
               disabled={isPublishing}
               onClick={() => showToast('Post saved as draft successfully!', 'info')}
             >
-              <FileText size={16} />
+              <FileText size={14} />
               <span>Save Draft</span>
             </button>
           </div>
@@ -440,9 +439,9 @@ function Compose() {
               mediaFile={mediaFile}
             />
           ) : (
-            <div className="glass-card" style={{ height: '300px', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', color: 'rgba(255,255,255,0.2)', gap: '12px' }}>
-              <AlertCircle size={32} />
-              <span>Select target channels to view content preview</span>
+            <div className="glass-card" style={{ height: '280px', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', color: 'var(--text-muted)', gap: '12px' }}>
+              <AlertCircle size={24} />
+              <span>Select target channels to view preview</span>
             </div>
           )}
         </div>
