@@ -135,8 +135,9 @@ async function publishToTarget(account, post, target) {
  */
 router.post('/', upload.single('media'), async (req, res) => {
   try {
-    const { title, description, targets: targetsJson } = req.body;
+    const { title, description, targets: targetsJson, isDraft } = req.body;
     const media = req.file;
+    const saveAsDraft = isDraft === 'true' || isDraft === true;
 
     // Parse targets
     let targets;
@@ -146,8 +147,8 @@ router.post('/', upload.single('media'), async (req, res) => {
       return res.status(400).json({ success: false, error: 'Invalid targets JSON' });
     }
 
-    if (!targets.length) {
-      return res.status(400).json({ success: false, error: 'At least one target is required' });
+    if (!saveAsDraft && !targets.length) {
+      return res.status(400).json({ success: false, error: 'At least one target is required to publish' });
     }
 
     // Determine media type
@@ -159,32 +160,49 @@ router.post('/', upload.single('media'), async (req, res) => {
     }
 
     // Create post record
+    const initialStatus = saveAsDraft ? 'draft' : 'publishing';
     const insertPost = db.prepare(`
       INSERT INTO posts (title, description, media_path, media_type, status)
-      VALUES (?, ?, ?, ?, 'publishing')
+      VALUES (?, ?, ?, ?, ?)
     `);
 
-    const postResult = insertPost.run(title || null, description || null, mediaPath, mediaType);
+    const postResult = insertPost.run(title || null, description || null, mediaPath, mediaType, initialStatus);
     const postId = postResult.lastInsertRowid;
 
     // Create post_targets records
-    const insertTarget = db.prepare(`
-      INSERT INTO post_targets (post_id, account_id, platform, custom_title, custom_description, custom_tags, status)
-      VALUES (?, ?, ?, ?, ?, ?, 'pending')
-    `);
+    if (targets.length > 0) {
+      const initialTargetStatus = saveAsDraft ? 'draft' : 'pending';
+      const insertTarget = db.prepare(`
+        INSERT INTO post_targets (post_id, account_id, platform, custom_title, custom_description, custom_tags, status)
+        VALUES (?, ?, ?, ?, ?, ?, ?)
+      `);
 
-    for (const target of targets) {
-      insertTarget.run(
-        postId,
-        target.accountId,
-        target.platform,
-        target.customTitle || null,
-        target.customDescription || null,
-        target.customTags || null
-      );
+      for (const target of targets) {
+        insertTarget.run(
+          postId,
+          target.accountId,
+          target.platform,
+          target.customTitle || null,
+          target.customDescription || null,
+          target.customTags || null,
+          initialTargetStatus
+        );
+      }
     }
 
-    // Publish to each target asynchronously
+    // If it's just a draft, stop here and return success
+    if (saveAsDraft) {
+      return res.json({
+        success: true,
+        data: {
+          postId,
+          status: 'draft',
+          results: []
+        }
+      });
+    }
+
+    // Publish to each target asynchronously (if not draft)
     const post = db.prepare('SELECT * FROM posts WHERE id = ?').get(postId);
     const postTargets = db.prepare('SELECT * FROM post_targets WHERE post_id = ?').all(postId);
 

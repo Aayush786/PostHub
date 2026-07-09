@@ -44,7 +44,8 @@ function PostHistory() {
             platforms,
             status: post.status,
             views: '0',
-            likes: '0'
+            likes: '0',
+            targets: post.targets || []
           }
         })
         setPosts(formatted)
@@ -67,7 +68,6 @@ function PostHistory() {
           method: 'DELETE'
         })
         if (response.ok) {
-          showToast('Post entry deleted successfully', 'success')
           fetchPostHistory()
         } else {
           setPosts(posts.filter(post => post.id !== id))
@@ -75,6 +75,20 @@ function PostHistory() {
       } catch (err) {
         setPosts(posts.filter(post => post.id !== id))
       }
+    }
+  }
+
+  const getPlatformUrl = (platform, platformPostId) => {
+    if (!platformPostId) return null
+    switch (platform) {
+      case 'facebook':
+        return `https://www.facebook.com/${platformPostId}`
+      case 'youtube':
+        return `https://www.youtube.com/watch?v=${platformPostId}`
+      case 'tiktok':
+        return `https://www.tiktok.com/video/${platformPostId}`
+      default:
+        return null
     }
   }
 
@@ -214,9 +228,36 @@ function PostHistory() {
                     </td>
                     <td>
                       <div className="badges-cell">
-                        {post.platforms.includes('facebook') && <span className="badge badge-facebook"><Facebook size={10} /> FB</span>}
-                        {post.platforms.includes('youtube') && <span className="badge badge-youtube"><Youtube size={10} /> YT</span>}
-                        {post.platforms.includes('tiktok') && <span className="badge badge-tiktok"><TikTokIcon size={10} /> TT</span>}
+                        {post.targets && post.targets.map(t => {
+                          const url = getPlatformUrl(t.platform, t.platform_post_id)
+                          const label = t.platform === 'facebook' ? 'FB' : t.platform === 'youtube' ? 'YT' : 'TT'
+                          if (url) {
+                            return (
+                              <a 
+                                key={t.id || t.platform} 
+                                href={url} 
+                                target="_blank" 
+                                rel="noopener noreferrer" 
+                                className={`badge badge-${t.platform}`}
+                                style={{ display: 'inline-flex', alignItems: 'center', gap: '4px', textDecoration: 'none' }}
+                                title={`View published post on ${t.platform}`}
+                              >
+                                {t.platform === 'facebook' && <Facebook size={10} />}
+                                {t.platform === 'youtube' && <Youtube size={10} />}
+                                {t.platform === 'tiktok' && <TikTokIcon size={10} />}
+                                <span>{label}</span>
+                              </a>
+                            )
+                          }
+                          return (
+                            <span key={t.id || t.platform} className={`badge badge-${t.platform}`} title={`${t.platform} Target (${t.status})`}>
+                              {t.platform === 'facebook' && <Facebook size={10} />}
+                              {t.platform === 'youtube' && <Youtube size={10} />}
+                              {t.platform === 'tiktok' && <TikTokIcon size={10} />}
+                              <span>{label}</span>
+                            </span>
+                          )
+                        })}
                       </div>
                     </td>
                     <td style={{ color: 'var(--text-secondary)', fontSize: '0.8125rem' }}>
@@ -255,12 +296,18 @@ function PostHistory() {
                     </td>
                     <td>
                       <div style={{ display: 'flex', gap: '2px' }}>
-                        {post.status === 'published' && (
+                        {post.status === 'published' && post.targets && post.targets.some(t => t.platform_post_id) && (
                           <button 
                             className="btn btn-ghost btn-sm" 
                             style={{ padding: '4px' }} 
-                            title="Open Link"
-                            onClick={() => window.open('#')}
+                            title="Open Published Link"
+                            onClick={() => {
+                              const publishedTarget = post.targets.find(t => t.platform_post_id)
+                              if (publishedTarget) {
+                                const url = getPlatformUrl(publishedTarget.platform, publishedTarget.platform_post_id)
+                                if (url) window.open(url, '_blank')
+                              }
+                            }}
                           >
                             <ExternalLink size={12} />
                           </button>
