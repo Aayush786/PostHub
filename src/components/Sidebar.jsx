@@ -8,13 +8,14 @@ function Sidebar({ isOpen, setIsOpen }) {
   useEffect(() => {
     fetch('/api/auth/accounts')
       .then(res => res.json())
-      .then(data => {
+      .then(json => {
+        const data = json.data
         if (Array.isArray(data)) {
           setConnectedCount(data.length)
         }
       })
       .catch(() => {
-        setConnectedCount(2) // Default placeholder for display
+        setConnectedCount(0) // Default fallback
       })
   }, [])
 

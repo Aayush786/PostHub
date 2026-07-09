@@ -19,7 +19,8 @@ function Accounts() {
   const fetchAccounts = () => {
     fetch('/api/auth/accounts')
       .then(res => res.json())
-      .then(data => {
+      .then(json => {
+        const data = json.data || []
         if (Array.isArray(data)) {
           const updated = accounts.map(acc => {
             const match = data.find(item => item.platform === acc.platform)

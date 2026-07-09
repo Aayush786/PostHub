@@ -74,7 +74,8 @@ function Analytics() {
     try {
       // Check if there are any connected accounts
       const accRes = await fetch('/api/auth/accounts')
-      const accData = await accRes.json()
+      const accJson = await accRes.json()
+      const accData = accJson.data || []
       
       const hasConnections = Array.isArray(accData) && accData.length > 0
       setHasConnectedChannels(hasConnections)
@@ -82,7 +83,8 @@ function Analytics() {
       if (hasConnections) {
         // Fetch real analytics data
         const statsRes = await fetch('/api/analytics/overview')
-        const statsData = await statsRes.json()
+        const statsJson = await statsRes.json()
+        const statsData = statsJson.data
         
         if (statsData) {
           setStats({

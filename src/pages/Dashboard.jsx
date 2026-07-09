@@ -46,7 +46,8 @@ function Dashboard() {
     try {
       // 1. Fetch connected channels
       const accRes = await fetch('/api/auth/accounts')
-      const accData = await accRes.json()
+      const accJson = await accRes.json()
+      const accData = accJson.data || []
       
       let connectedPlatformsCount = 0
       const updatedAccounts = accounts.map(acc => {
@@ -71,7 +72,8 @@ function Dashboard() {
 
       // 2. Fetch recent posts
       const postsRes = await fetch('/api/posts')
-      const postsData = await postsRes.json()
+      const postsJson = await postsRes.json()
+      const postsData = postsJson.data || []
       if (Array.isArray(postsData)) {
         const formatted = postsData.slice(0, 5).map(post => {
           const platforms = post.targets ? post.targets.map(t => t.platform) : []
@@ -107,16 +109,17 @@ function Dashboard() {
 
       // 3. Fetch summary stats
       const statsRes = await fetch('/api/analytics/overview')
-      const statsData = await statsRes.json()
-      if (statsData && statsData.totalFollowers) {
+      const statsJson = await statsRes.json()
+      const statsData = statsJson.data
+      if (statsData && statsData.totalAccounts !== undefined) {
         setStats({
-          totalFollowers: statsData.totalFollowers.toLocaleString(),
+          totalFollowers: statsData.totalFollowers ? statsData.totalFollowers.toLocaleString() : '0',
           totalFollowersChange: statsData.totalFollowersChange || '',
-          totalViews: statsData.totalViews.toLocaleString(),
+          totalViews: statsData.totalViews ? statsData.totalViews.toLocaleString() : '0',
           totalViewsChange: statsData.totalViewsChange || '',
           engagementRate: statsData.engagementRate ? `${statsData.engagementRate}%` : '0%',
           engagementRateChange: statsData.engagementRateChange || '',
-          postsCount: statsData.postsCount || '0',
+          postsCount: statsData.totalPosts || '0',
           postsCountChange: statsData.postsCountChange || ''
         })
       }

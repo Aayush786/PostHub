@@ -30,7 +30,8 @@ function PostHistory() {
     setLoading(true)
     try {
       const response = await fetch('/api/posts')
-      const data = await response.json()
+      const json = await response.json()
+      const data = json.data || []
       if (Array.isArray(data)) {
         const formatted = data.map(post => {
           const platforms = post.targets ? post.targets.map(t => t.platform) : []
