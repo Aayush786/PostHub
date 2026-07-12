@@ -10,7 +10,7 @@
       "destination": "https://posthub-2i6j.onrender.com/uploads/:path*"
     },
     {
-      "source": "/((?!api|uploads|assets).*)",
+      "source": "/:path*",
       "destination": "/index.html"
     }
   ]
