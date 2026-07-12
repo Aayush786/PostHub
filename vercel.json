@@ -1,17 +1,21 @@
 {
   "cleanUrls": true,
-  "rewrites": [
+  "routes": [
     {
-      "source": "/api/:path*",
-      "destination": "https://posthub-2i6j.onrender.com/api/:path*"
+      "src": "/api/(.*)",
+      "dest": "https://posthub-2i6j.onrender.com/api/$1"
     },
     {
-      "source": "/uploads/:path*",
-      "destination": "https://posthub-2i6j.onrender.com/uploads/:path*"
+      "src": "/uploads/(.*)",
+      "dest": "https://posthub-2i6j.onrender.com/uploads/$1"
     },
     {
-      "source": "/:path*",
-      "destination": "/index.html"
+      "src": "/assets/(.*)",
+      "dest": "/assets/$1"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "/index.html"
     }
   ]
 }
