@@ -6,6 +6,7 @@ import Compose from './pages/Compose'
 import Analytics from './pages/Analytics'
 import Accounts from './pages/Accounts'
 import PostHistory from './pages/PostHistory'
+import Privacy from './pages/Privacy'
 import { Menu } from 'lucide-react'
 
 function App() {
@@ -33,6 +34,7 @@ function App() {
           <Route path="/analytics" element={<Analytics />} />
           <Route path="/accounts" element={<Accounts />} />
           <Route path="/history" element={<PostHistory />} />
+          <Route path="/privacy" element={<Privacy />} />
         </Routes>
       </main>
     </div>

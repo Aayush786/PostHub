@@ -21,3 +21,5 @@ server/db.sqlite
 # OS Files
 .DS_Store
 Thumbs.db
+
+.vercel
