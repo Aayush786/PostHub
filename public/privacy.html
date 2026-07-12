@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Privacy Policy & Data Deletion Instructions — PostHub</title>
+  <style>
+    :root {
+      --bg: #09090b;
+      --card: #121215;
+      --border: rgba(255, 255, 255, 0.08);
+      --text: #ffffff;
+      --text-secondary: rgba(255, 255, 255, 0.6);
+      --primary: #7c3aed;
+      --font: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    }
+
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+      font-family: var(--font);
+      margin: 0;
+      padding: 40px 20px;
+      line-height: 1.6;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    header {
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 24px;
+      margin-bottom: 32px;
+    }
+
+    h1 {
+      font-size: 2rem;
+      font-weight: 700;
+      margin: 0 0 8px 0;
+      letter-spacing: -0.025em;
+    }
+
+    .subtitle {
+      color: var(--text-secondary);
+      margin: 0;
+      font-size: 0.95rem;
+    }
+
+    .card {
+      background-color: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 24px;
+      margin-bottom: 24px;
+      box-shadow: 0 4px 30px rgba(0, 0, 0, 0.2);
+    }
+
+    h2 {
+      font-size: 1.25rem;
+      font-weight: 600;
+      margin-top: 0;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    p {
+      color: var(--text-secondary);
+      font-size: 0.925rem;
+      margin-top: 0;
+      margin-bottom: 16px;
+    }
+
+    ul {
+      color: var(--text-secondary);
+      font-size: 0.925rem;
+      padding-left: 20px;
+      margin: 0;
+    }
+
+    li {
+      margin-bottom: 8px;
+    }
+
+    a {
+      color: var(--primary);
+      text-decoration: none;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 2px 8px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      border-radius: 4px;
+      text-transform: uppercase;
+    }
+    
+    .badge-fb { background: rgba(24, 119, 242, 0.15); color: #1877f2; }
+    .badge-yt { background: rgba(255, 0, 0, 0.15); color: #ff0000; }
+    .badge-tt { background: rgba(0, 242, 234, 0.15); color: #00f2ea; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>Privacy Policy & Data Deletion</h1>
+      <p class="subtitle">Last Updated: July 12, 2026. Official privacy disclosures and deletion instructions for PostHub integration.</p>
+    </header>
+
+    <!-- Overview -->
+    <div class="card">
+      <h2>1. Overview & Data Ownership</h2>
+      <p>
+        PostHub is a self-hosted social media management tool designed to publish and schedule posts to Facebook Pages, YouTube Channels, and TikTok Accounts simultaneously. All user data, including API access tokens, channel statistics, and drafts, are stored locally within your secure SQLite database instance. No personal data is transmitted, processed, or stored on third-party servers.
+      </p>
+    </div>
+
+    <!-- Data We Access -->
+    <div class="card">
+      <h2>2. Data We Retrieve</h2>
+      <p>
+        When you connect a social media account through our secure OAuth authentication flow, we retrieve and access the following information:
+      </p>
+      <ul>
+        <li><strong>Meta (Facebook Pages):</strong> <span class="badge badge-fb">Facebook Graph API</span> access tokens, Page name, Page ID, page follower count, and post metrics.</li>
+        <li><strong>Google (YouTube Channels):</strong> <span class="badge badge-yt">YouTube Data API v3</span> access tokens, channel name, channel ID, subscriber count, video metrics, and video upload endpoints.</li>
+        <li><strong>TikTok:</strong> <span class="badge badge-tt">TikTok Content Posting API</span> access tokens, account display name, username, open_id, and video publishing statuses.</li>
+      </ul>
+    </div>
+
+    <!-- Data Usage -->
+    <div class="card">
+      <h2>3. How We Use the Data</h2>
+      <p>
+        We only use the retrieved credentials and API scopes to perform actions that you explicitly authorize inside the app:
+      </p>
+      <ul>
+        <li>Uploading, publishing, and scheduling text, photo, and video posts to your connected channels.</li>
+        <li>Reading Page, Video, and Channel insights to display your performance metrics inside the Analytics Dashboard.</li>
+        <li>We do **not** sell, share, rent, or distribute any user data, credentials, or API tokens with third parties under any circumstances.</li>
+      </ul>
+    </div>
+
+    <!-- Deletion Instructions -->
+    <div class="card">
+      <h2>4. User Data Deletion Instructions</h2>
+      <p>
+        You have absolute control over your connected accounts and API data. You can delete your data in any of the following ways:
+      </p>
+      <ul>
+        <li><strong>Disconnecting inside PostHub:</strong> Go to the **Connected Channels** tab and click the **"Disconnect"** button. This immediately and permanently deletes the account's access token, refresh token, and metadata from your SQLite database.</li>
+        <li><strong>Revoking from Platform Settings:</strong> You can revoke PostHub's API access at any time directly through the platform developer consoles:
+          <ul style="padding-left: 20px; margin-top: 8px; list-style-type: circle;">
+            <li>Facebook: App settings under your Facebook account security configurations.</li>
+            <li>Google/YouTube: <a href="https://myaccount.google.com/permissions" target="_blank" rel="noopener noreferrer">Google Account Security Permissions</a>.</li>
+            <li>TikTok: Account Settings & Privacy &gt; Security and Login &gt; Manage App Permissions.</li>
+          </ul>
+        </li>
+      </ul>
+    </div>
+
+    <!-- Contact -->
+    <div class="card" style="border: 1px solid rgba(124, 58, 237, 0.25);">
+      <h2>5. Contact & Compliance</h2>
+      <p>
+        For privacy inquiries, technical support, or complete data deletion requests, you can contact the developer directly or inspect the source code on our open repository.
+      </p>
+    </div>
+  </div>
+</body>
+</html>
